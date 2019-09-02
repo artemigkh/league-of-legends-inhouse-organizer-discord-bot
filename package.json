@@ -1,0 +1,24 @@
+{
+  "name": "league-of-legends-inhouse-discord-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/src/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^12.7.2",
+    "discord.js": "^11.5.1",
+    "formdata-node": "^1.8.0",
+    "node-cache": "^4.2.1",
+    "rxjs": "^6.5.2",
+    "winston": "^3.2.1",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.6.2"
+  }
+}

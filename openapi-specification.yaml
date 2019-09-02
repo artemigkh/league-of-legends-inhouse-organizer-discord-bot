@@ -1,0 +1,211 @@
+openapi: 3.0.0
+
+info:
+  version: 1.0.0
+  title: LoL API
+
+tags:
+  - name: tournament
+  - name: summoner
+
+paths:
+  /lol/tournament-stub/v4/providers:
+    post:
+      operationId: registerProvider
+      tags:
+        - tournament
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderRegistrationParameters'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+
+  /lol/tournament-stub/v4/tournaments:
+    post:
+      operationId: registerTournament
+      tags:
+        - tournament
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TournamentRegistrationParameters'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+
+  /lol/tournament-stub/v4/codes:
+    post:
+      operationId: generateCode
+      tags:
+        - tournament
+      parameters:
+        - in: query
+          name: tournamentId
+          schema:
+            type: integer
+        - in: query
+          name: count
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TournamentCodeParameters'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /lol/tournament-stub/v4/lobby-events/by-code/{tournamentCode}:
+    get:
+      operationId: getLobbyEvents
+      tags:
+        - tournament
+      parameters:
+        - in: path
+          name: tournamentCode
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LobbyEventDTOWrapper'
+
+  /lol/summoner/v4/summoners/{encryptedSummonerId}:
+    get:
+      operationId: getSummoner
+      tags:
+        - summoner
+      parameters:
+        - in: path
+          name: encryptedSummonerId
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummonerDTO'
+
+components:
+  schemas:
+    ProviderRegistrationParameters:
+      type: object
+      required:
+        - region
+        - url
+      properties:
+        region:
+          type: string
+        url:
+          type: string
+
+    TournamentRegistrationParameters:
+      type: object
+      required:
+        - providerId
+      properties:
+        name:
+          type: string
+        providerId:
+          type: integer
+
+    TournamentCodeParameters:
+      type: object
+      required:
+        - teamSize
+        - pickType
+        - mapType
+        - spectatorType
+      properties:
+        teamSize:
+          type: integer
+        pickType:
+          type: string
+          enum:
+            - BLIND_PICK
+            - DRAFT_MODE
+            - ALL_RANDOM
+            - TOURNAMENT_DRAFT
+        mapType:
+          type: string
+          enum:
+            - SUMMONERS_RIFT
+            - TWISTED_TREELINE
+            - HOWLING_ABYSS
+
+        spectatorType:
+          type: string
+          enum:
+            - NONE
+            - LOBBYONLY
+            - ALL
+
+    LobbyEventDTO:
+      type: object
+      properties:
+        eventType:
+          type: string
+          enum:
+            - PracticeGameCreatedEvent
+            - PlayerJoinedGameEvent
+            - PlayerSwitchedTeamEvent
+            - PlayerQuitGameEvent
+            - ChampSelectStartedEvent
+            - GameAllocationStartedEvent
+            - GameAllocatedToLsmEvent
+        timestamp:
+          type: string
+        summonerId:
+          type: string
+
+    LobbyEventDTOWrapper:
+      type: object
+      properties:
+        eventList:
+          type: array
+          items:
+            $ref: '#/components/schemas/LobbyEventDTO'
+
+    SummonerDTO:
+      type: object
+      properties:
+        profileIconId:
+          type: integer
+        name:
+          type: string
+        puuid:
+          type: string
+        summonerLevel:
+          type: integer
+          format: int64
+        revisionDate:
+          type: integer
+          format: int64
+        id:
+          type: string
+        accountId:
+          type: string
