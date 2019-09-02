@@ -1,0 +1,5 @@
+src/Config.ts
+.idea/
+dist/
+generated/
+node_modules/
